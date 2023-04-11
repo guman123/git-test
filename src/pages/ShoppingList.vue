@@ -43,7 +43,6 @@
       ></q-checkbox>
     </q-card-section>
 
-    <!--내용저장-->
      <q-card-section v-if="editing" class="col-12 col-md-3">
       <q-btn outline rounded color="primary" @click="saveItem()" label="아이템 저장"></q-btn>
     </q-card-section>
@@ -68,7 +67,7 @@
       </q-item>
     </q-list>
   </q-card-section>
-    <!--notify-->
+
     <q-item-section class="row text-center">
         <q-card-section>
           <span v-if="items.length === 0"
