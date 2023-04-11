@@ -2,6 +2,7 @@
   <q-card-section class="row text-center">
     <q-card-section class="col text-h4 text-primary">
       {{  header || "welCome" }}
+      <!--add item or modi-->
       <q-btn
         v-if="editing"
         @click="doEdit(false)"
@@ -11,18 +12,18 @@
         label="Cancel"
       ></q-btn>
       <q-btn
-        v-else
-        @click="doEdit(true)"
-        color="primary"
-              unelevated
-              rounded
-              icon-right="send"
-              label="Add Item"
-        ></q-btn>
-          </q-card-section>
-        </q-card-section>
+      v-else
+      @click="doEdit(true)"
+      color="primary"
+            unelevated
+            rounded
+            icon-right="send"
+            label="Add Item"
+      ></q-btn>
+    </q-card-section>
+  </q-card-section>
 
-        <!--item add-->
+  <!--item add-->
   <q-card-section class="row justify-center">
     <q-card-section v-if="editing" class="col-8 col-md-3">
       <q-input
@@ -43,24 +44,26 @@
       ></q-checkbox>
     </q-card-section>
 
+    <!--saveItem-->
      <q-card-section v-if="editing" class="col-12 col-md-3">
       <q-btn outline rounded color="primary" @click="saveItem()" label="아이템 저장"></q-btn>
     </q-card-section>
   </q-card-section>
 
-      <q-card-section>
-        <q-list bordered>
-          <q-item
-          v-for="item in reversedItems"
-          :key="item.id"
-          @click="togglePurchased(item)"
-          class="rounded-border"
-          :class="{strikeout:item.purchased, priority:item.highPriority}"
-          dense
-          padding
-          clickable
-          v-ripple
-        >
+  <!--list-->
+  <q-card-section>
+    <q-list bordered>
+      <q-item
+        v-for="item in reversedItems"
+        :key="item.id"
+        @click="togglePurchased(item)"
+        class="rounded-border"
+        :class="{strikeout:item.purchased, priority:item.highPriority}"
+        dense
+        padding
+        clickable
+        v-ripple
+      >
         <q-item-section>
           {{ item.label }}
         </q-item-section>
@@ -68,7 +71,8 @@
     </q-list>
   </q-card-section>
 
-    <q-item-section class="row text-center">
+  <!--notify-->
+  <q-item-section class="row text-center">
         <q-card-section>
           <span v-if="items.length === 0"
             > 모든 상품을 구매하셨군요! 새 상품을 담아보시죠!</span
@@ -76,7 +80,6 @@
         </q-card-section>
   </q-item-section>
 </template>
-
 
 <script>
 export default {
@@ -92,7 +95,7 @@ export default {
       ],
       editing:false,
       newItem:"",
-      newItemHightPriority:false,
+      newItemHighPriority:false,
     }
   },
   computed : {
@@ -107,7 +110,7 @@ export default {
     doEdit(editing){
       this.editing = editing;
       this.newItem = "";
-      this.newItemHightPriority = false;
+      this.newItemHighPriority = false;
     },
     async saveItem(){
       if(this.newItem.length == 0) return;
@@ -127,6 +130,7 @@ export default {
       this.newItemHighPriority =false;
     }
   }
+
 }
 </script>
 
