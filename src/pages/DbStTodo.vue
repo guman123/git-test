@@ -24,7 +24,7 @@
         v-for="item in tasks"
         :key="item.title"
         @click="item.done = item.done == 'Y' ? 'N' : 'Y'"
-        :class="{ 'done bg-blue-1': item.done == 'Y' }"
+        :class="{ 'done bg-blue-1': item.done === 'Y' }"
         v-ripple
         clickable
       >
@@ -84,17 +84,18 @@
 <script>
 import { defineComponent } from "vue";
 import todoApi from "src/apis/todoApi";
+import useTodoStore from "src/stores/dbsttodo"
 import { mapActions, mapState } from "pinia";
 import DialogCustom from "components/DialogCustom.vue";
 
 export default defineComponent({
-  name: "Todo",
-  title: "DB Todo list",
+  name: "Store Todo",
+  title: "DB STORO Todo list",
   components: { DialogCustom },
   data() {
     return {
       newTask: "",
-      tasks: [],
+      //tasks: [],
       totalCount: 0,
       origin: null,
       editTask: null,
@@ -103,62 +104,19 @@ export default defineComponent({
   mounted() {
     this.fetchData();
   },
-  computed: {},
+  computed: {
+    ...mapState(useTodoStore, ["tasks"])
+  },
   methods: {
-    //추가
+    ...mapActions(useTodoStore, ["insertTodo","fetchData","removeDBItem","editDBTodo","resetDb"]),
     async addDbTask() {
-      if (!this.newTask) {
-        this.$refs.list.focus(); //포커스 외부로 돌림
+      if(this.newTask){
+        this.insertTodo(this.newTask);
+
       }
-      const payload = {
-        title: this.newTask,
-      };
-      //저장
-      const result = await todoApi.create(payload);
-      if (result.status == 200) {
-        if (result.data.id) {
-          // front
-          this.tasks.unshift({
-            id: result.data.id,
-            title: this.newTask,
-            done: "N",
-          });
-          this.totalCount++;
-        }
-        await this.$q.notify({
-          message: `${this.newTask} 추가하셨습니다`,
-          icon: "home",
-          color: "primary",
-        });
-        this.newTask = "";
-      }
+      this.newTask="";
     },
 
-    //목록가져오기
-    async fetchData() {
-      const len = 5;
-      const lastId = this.tasks.length
-        ? this.tasks[this.tasks.length - 1].id
-        : 0;
-
-      if (this.tasks.length > 0 && this.tasks.length == this.totalCount) {
-        console.log("fetchData 호출안함", this.tasks.length, this.totalCount);
-        return false;
-      }
-      const payload = {
-        lastId,
-        len,
-      };
-      const result = await todoApi.list(payload);
-      if (result.data && result.data.list) {
-        this.tasks = [...this.tasks, ...result.data.list];
-        this.totalCount = result.data.totalCount;
-      }
-      // this.tasks = [];
-      // this.totalCount = 0;
-    },
-
-    //intersection
     async onIntersection(entry) {
       if (entry.isIntersecting) {
         this.$q.loading.show();
@@ -173,38 +131,24 @@ export default defineComponent({
       this.origin = this.editTask.title;
     },
     //수정
-    async editDBTodo(item) {
-      //배열에서 수정하되 done은 'n'으로
-      const idx = this.tasks.findIndex((task) => task == item);
-      item.done = "N";
-      this.tasks.splice(idx, 1, item);
+    // async editDBTodo(item) {
+    //   //배열에서 수정하되 done은 'n'으로
+    //   const idx = this.tasks.findIndex((task) => task == item);
+    //   item.done = "N";
+    //   this.tasks.splice(idx, 1, item);
 
-      if (this.editTask.title != this.origin) {
-        //타이틀이 다를때만 수정
-        await todoApi.update(item);
-        await this.$q.notify({
-          message: `${item.title} 수정하셨습니다`,
-          icon: "home",
-          color: "primary",
-        });
-      }
-    },
+    //   if (this.editTask.title != this.origin) {
+    //     //타이틀이 다를때만 수정
+    //     await todoApi.update(item);
+    //   }
+    // },
 
     //삭제
-    async removeDBItem(item) {
-      // 배열 안 오브젝트일때 idx
-      const idx = this.tasks.findIndex((task) => task.id == item.id);
-      //삭제 array.splice(시작 index, 제거 index, 추가 요소)
-      this.tasks.splice(idx, 1);
-      const result = await todoApi.remove(item);
-      if (result.status == 200) {
-        await this.$q.notify({
-          message: `${item.title} 삭제하셨습니다`,
-          icon: "home",
-          color: "primary",
-        });
-      }
+    removeDBItem(item){
+      this.removeDBItem(item);
+      this.newTask="";
     },
+
 
     //더미리스트 만들기
     async resetDb() {
@@ -223,7 +167,8 @@ export default defineComponent({
       }
     },
   },
-});
+}
+);
 </script>
 
 <style lang="scss">
