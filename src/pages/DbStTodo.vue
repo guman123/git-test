@@ -158,7 +158,7 @@ export default defineComponent({
       const payload = {
         title: "todo_",
         done: "N",
-        len: 100,
+        len: 20,
       };
       const result = await todoApi.reset(payload);
       if (result.status == 200) {
