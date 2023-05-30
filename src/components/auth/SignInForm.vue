@@ -29,6 +29,7 @@
             : true,
       ]"
       debounce
+      minlength="1"
       maxlength="10"
       :cbCheck="cbCheckId"
     >

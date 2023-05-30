@@ -1,12 +1,12 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <div class="row flex flex-center my-login">
+    <div class="row flex-center items-center">
       <video
-        class="video"
         poster="https://cdn.quasar.dev/img/polina.jpg"
         autoplay
         loop
         muted
+        id="bgvid"
       >
         <source
           type="video/webm"
@@ -21,17 +21,23 @@
           square
           style="min-width: 400px; min-height: 650px"
         >
+          <q-card-section>
+            <q-btn to="/" label="main" flat color="primary"></q-btn>
+            <span> | </span>
+            <q-btn to="/login" label="login" flat color="primary"></q-btn>
+          </q-card-section>
           <q-card-section class="flex justify-center">
             <q-card-section style="align-self: center">
               <q-card-section
-                class="text-h4 q-mb-xl text-primary text-weight-bold q-mt-sm"
+                class="text-h4 q-mb-xl text-primary text-weight-bold"
                 >Signin</q-card-section
               >
               <SignInForm
                 :cbCheckId="cbCheckId"
                 :cbCheckEmail="cbCheckEmail"
-                :isLoading="isLoading"
+                isLoading:isLoading
                 @onSave="save"
+                class="q-mb-xl"
               ></SignInForm>
             </q-card-section>
           </q-card-section>
@@ -86,22 +92,21 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.my-container {
-  margin: 0 auto;
-}
-.my-login {
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  margin: 0px auto;
-  position: relative;
-}
 .my-card {
-  margin: 0px auto;
-  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
-
-video {
-  height: 100%;
+video#bgvid {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -100;
+  background-size: cover;
 }
 </style>
